@@ -2,17 +2,31 @@
 
 ## Overview
 
-This project is a hands-on implementation of an ERC-20 token built from scratch using Solidity.
+This project is a hands-on implementation of an ERC-20 token built completely from scratch using Solidity.
 
-The main goal is not only to create a token contract, but also to deeply understand:
+The goal is not only to create a working token contract, but also to deeply understand:
 
-- Why token standards exist
-- The problems ERC-20 solves
-- How wallets and exchanges interact with tokens
-- How token balances and transfers work internally
-- Why standardization is essential in blockchain ecosystems
+- why token standards exist
+- the problems ERC-20 solves
+- how wallets and exchanges interact with tokens
+- how balances and allowances work internally
+- how smart contracts communicate
+- why standardization is critical in blockchain ecosystems
 
-This project focuses on learning the architecture and logic behind ERC-20 instead of simply copying existing code.
+This repository focuses on learning the architecture and internal logic behind ERC-20 instead of blindly copying existing implementations.
+
+---
+
+# Architecture Overview
+
+![ERC-20 Architecture](./images/erc20-overview.png)
+
+For deeper technical documentation:
+
+- [Architecture](./docs/architecture.md)
+- [ERC-20 Internals](./docs/erc20-internals.md)
+- [Implementation Notes](./docs/implementation-notes.md)
+- [Diagrams & Flowcharts](./docs/diagrams.md)
 
 ---
 
@@ -28,15 +42,15 @@ Ethereum allows developers to deploy smart contracts.
 
 This means anyone can create their own digital currency by writing a contract.
 
-For example:
+Example:
 
 ```solidity
 mapping(address => uint256) balances;
 ```
 
-This mapping can store how many tokens each address owns.
+This mapping can already represent token ownership.
 
-At this point, we already have the foundation of a cryptocurrency.
+At this point, we technically have the foundation of a cryptocurrency.
 
 But a major problem appears immediately.
 
@@ -44,13 +58,13 @@ But a major problem appears immediately.
 
 ## Step 2 — Every Developer Could Build Tokens Differently
 
-One developer might create a transfer function like:
+One developer might create:
 
 ```solidity
 send(address to, uint256 amount)
 ```
 
-Another developer might write:
+Another might write:
 
 ```solidity
 transferCoins(address receiver, uint256 value)
@@ -62,21 +76,22 @@ Another might use:
 moveTokens(address user, uint256 quantity)
 ```
 
-All of these functions may perform the same task, but they use different names and structures.
+All of these functions may perform the same operation, but they use different names and structures.
 
-This creates inconsistency.
+This creates inconsistency across the ecosystem.
 
 ---
 
 ## Step 3 — Wallets Cannot Understand Every Token Automatically
 
-A wallet application like MetaMask needs to know:
+Wallets like MetaMask need standardized ways to:
 
-- How to check balances
-- How to transfer tokens
-- How to display token information
+- check balances
+- transfer tokens
+- display token information
+- monitor activity
 
-But if every token uses different function names and different logic, wallets must write custom code for every single token.
+Without a standard, wallets would need custom integration code for every token ever created.
 
 That becomes impossible at scale.
 
@@ -84,31 +99,34 @@ That becomes impossible at scale.
 
 ## Step 4 — Exchanges Face the Same Problem
 
-Decentralized exchanges and applications also need consistent ways to:
+Exchanges and decentralized applications also require consistent interaction methods.
 
-- Read balances
-- Transfer tokens
-- Approve spending
-- Interact with smart contracts
+They need reliable ways to:
+
+- read balances
+- transfer tokens
+- request permissions
+- execute transactions
 
 Without standardization:
 
-- Every token behaves differently
-- Integrations become expensive
-- Compatibility breaks
-- The ecosystem becomes fragmented
+- integrations become expensive
+- compatibility breaks
+- every token behaves differently
+- the ecosystem becomes fragmented
 
 ---
 
 ## Step 5 — Ethereum Needed a Shared Rulebook
 
-The Ethereum community realized that all fungible tokens should follow the same structure.
+The Ethereum community realized that fungible tokens should follow one common structure.
 
-So they created a standard that defines:
+So they created a standard defining:
 
-- Required functions
-- Expected behavior
-- Common interaction methods
+- required functions
+- expected behavior
+- common interaction patterns
+- shared event formats
 
 This standard became ERC-20.
 
@@ -121,14 +139,14 @@ ERC-20 is a technical standard for fungible tokens on Ethereum.
 - ERC = Ethereum Request for Comment
 - 20 = Proposal number 20
 
-ERC-20 defines a common set of rules that tokens must follow.
+ERC-20 defines a common interface that token contracts must follow.
 
-Because of this standard:
+Because of this:
 
-- Wallets can support tokens automatically
-- Exchanges can list tokens easily
-- Smart contracts can interact consistently
-- Developers can build interoperable applications
+- wallets can support tokens automatically
+- exchanges can integrate easily
+- dApps can interact consistently
+- developers can build interoperable systems
 
 ---
 
@@ -136,26 +154,28 @@ Because of this standard:
 
 A fungible asset means every unit is interchangeable and equal in value.
 
-Example:
+Examples:
 
 - 1 USDT = another 1 USDT
 - 1 USDC = another 1 USDC
 
 Just like:
 
-- One dollar bill has the same value as another dollar bill
+- one dollar bill has the same value as another dollar bill
 
-This is different from NFTs, where every asset is unique.
+This differs from NFTs, where every asset is unique.
 
 ---
 
 # Core ERC-20 Functions
 
-The ERC-20 standard defines several important functions.
+ERC-20 defines several standardized functions.
+
+---
 
 ## 1. balanceOf()
 
-Checks how many tokens an address owns.
+Returns how many tokens an address owns.
 
 ```solidity
 balanceOf(address account)
@@ -165,7 +185,7 @@ balanceOf(address account)
 
 ## 2. transfer()
 
-Transfers tokens from one account to another.
+Transfers tokens directly to another address.
 
 ```solidity
 transfer(address to, uint256 amount)
@@ -185,7 +205,7 @@ approve(address spender, uint256 amount)
 
 ## 4. allowance()
 
-Checks how many tokens a spender is allowed to use.
+Returns how many tokens a spender is allowed to use.
 
 ```solidity
 allowance(address owner, address spender)
@@ -205,37 +225,60 @@ transferFrom(address from, address to, uint256 amount)
 
 # Why approve() and transferFrom() Exist
 
-These functions are extremely important for decentralized applications.
+These functions enable delegated spending.
 
-Example:
+This is essential for decentralized applications like:
 
-A decentralized exchange cannot directly access your wallet.
+- decentralized exchanges
+- staking systems
+- lending protocols
+- DeFi applications
 
-Instead:
+Example flow:
 
-1. You approve the exchange to spend a certain amount
-2. The exchange calls transferFrom()
-3. The transfer happens within the approved limit
+1. User approves a dApp to spend tokens
+2. The dApp calls `transferFrom()`
+3. Tokens move within the approved limit
 
-This creates a permission-based system.
+This creates a permission-based system without exposing private keys.
+
+---
+
+# Internal ERC-20 Mental Model
+
+Internally, ERC-20 is fundamentally:
+
+```text
+A standardized decentralized accounting system
+```
+
+The contract manages:
+
+- balances
+- permissions
+- total supply
+- transfers
+- event logs
+
+Everything is based on controlled updates to blockchain storage.
 
 ---
 
 # Project Goals
 
-This project aims to build an ERC-20 token step by step while understanding:
+This project aims to build an ERC-20 token step-by-step while understanding:
 
-- State variables
-- Mappings
-- Token balances
-- Transfers
-- Allowances
-- Events
-- Security considerations
-- Standardized interfaces
-- Smart contract interoperability
+- state variables
+- mappings
+- token balances
+- transfer logic
+- allowance systems
+- events
+- minting and burning
+- security checks
+- smart contract interoperability
 
-The focus is educational and architectural.
+The focus is educational, architectural, and implementation-oriented.
 
 ---
 
@@ -243,7 +286,8 @@ The focus is educational and architectural.
 
 - Solidity
 - Ethereum Virtual Machine (EVM)
-- Remix IDE or Foundry/Hardhat
+- Remix IDE
+- Foundry / Hardhat
 
 ---
 
@@ -251,12 +295,42 @@ The focus is educational and architectural.
 
 By completing this project, you should understand:
 
-- Why standards matter in software systems
-- How ERC-20 created interoperability in Ethereum
-- How wallets and dApps interact with tokens
-- How token transfers are implemented internally
-- How approvals and delegated spending work
-- How smart contracts communicate through standardized interfaces
+- why standards matter in distributed systems
+- how ERC-20 created interoperability on Ethereum
+- how wallets and dApps interact with tokens
+- how balances are stored internally
+- how delegated spending works
+- how events power blockchain interfaces
+- how smart contracts communicate through standard interfaces
+
+---
+
+# Repository Structure
+
+```text
+ERC20-Project/
+│
+├── contracts/
+│   ├── core/
+│   │   └── ERC20.sol
+│   │
+│   ├── interfaces/
+│   │   └── IERC20.sol
+│   │
+│   └── tokens/
+│       └── MyToken.sol
+│
+├── docs/
+│   ├── architecture.md
+│   ├── erc20-internals.md
+│   ├── implementation-notes.md
+│   └── diagrams.md
+│
+├── images/
+│   └── erc20-overview.png
+│
+└── README.md
+```
 
 ---
 
@@ -275,4 +349,3 @@ All tokens follow the same communication rules.
 ```
 
 That standardization is what allowed the Ethereum token ecosystem to scale.
-

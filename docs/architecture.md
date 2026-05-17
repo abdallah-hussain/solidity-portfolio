@@ -2,9 +2,14 @@
 
 ## Overview
 
-An ERC-20 token system is not only a smart contract.
+An ERC-20 token system is not just a smart contract.  
+It is a full ecosystem where multiple layers work together to enable token ownership, transfers, and approvals.
 
-It is a complete interaction between multiple layers working together:
+The smart contract is the core, but users never interact with it directly. Instead, they go through applications and wallets.
+
+---
+
+# System Architecture
 
 ```text
 User
@@ -21,302 +26,138 @@ ERC-20 Smart Contract
 
 ````
 
-Each layer has a specific responsibility.
-
-Understanding how these layers connect is essential for understanding blockchain development.
 
 ---
 
-# System Layers
+# 1. User Layer
 
-## 1. User Layer
+The user is the person performing actions such as:
+- Sending tokens
+- Receiving tokens
+- Approving spending
+- Checking balances
 
-The user is the person interacting with the application.
-
-### Example Actions
-
-* Send tokens
-* Receive tokens
-* Approve spending
-* Check balances
-
-### Example
-
-```text
-Alice sends 100 MTK to Bob
-```
-
-The user cannot directly interact with Ethereum.
-
-The user needs:
-
-* a frontend application
-* a wallet
+The user does NOT interact directly with blockchain systems.
 
 ---
 
-## 2. Frontend Layer (Website / dApp)
+# 2. Frontend Layer (dApp / Website)
 
-The frontend is the application interface.
+The frontend is the interface between user and blockchain.
 
-### Common Technologies
+## Responsibilities:
+- Display token balances
+- Provide buttons and forms
+- Build transaction requests
+- Call smart contract functions
+- Show transaction results
 
-* HTML
-* CSS
-* JavaScript
-* React
-* Next.js
+## Important limitation:
+The frontend cannot execute transactions alone.
 
-### Responsibilities
-
-* Display balances
-* Show buttons and forms
-* Send requests to smart contracts
-* Display blockchain data
-
-### Example UI
-
-```text
-[ Send Tokens ]
-```
-
-When the user clicks a button, the frontend prepares a request:
-
-```javascript
-contract.transfer(bob, 100)
-```
-
-However, the frontend alone cannot execute blockchain transactions.
-
-Why?
-
-Because blockchain transactions require cryptographic authorization.
+It can only request actions.
 
 ---
 
-## 3. Wallet Layer (MetaMask)
+# 3. Wallet Layer (MetaMask)
 
-The wallet acts as the user's blockchain identity system.
+The wallet is the user's identity and security layer.
 
-### Examples
+## Responsibilities:
+- Store private keys securely
+- Sign transactions cryptographically
+- Confirm or reject requests from dApps
+- Represent the user's blockchain identity
 
-* MetaMask
-* Rabby
-* Trust Wallet
+## Key idea:
+Wallets do NOT store tokens.
 
-### Responsibilities
-
-* Store private keys
-* Sign transactions
-* Connect users to blockchain applications
-* Approve or reject actions
-
-> Important:
->
-> Wallets do NOT store tokens.
->
-> Tokens exist on the blockchain inside smart contracts.
-
-The wallet only:
-
-* proves ownership
-* authorizes actions
-* signs transactions
+Tokens exist on the blockchain, not inside the wallet.
 
 ---
 
-# Frontend vs Wallet
+# 4. Ethereum Network
 
-| Frontend                  | Wallet                          |
-| ------------------------- | ------------------------------- |
-| User interface            | User identity system            |
-| Displays data             | Signs transactions              |
-| Cannot spend funds        | Can authorize spending          |
-| Handles interaction logic | Handles cryptographic ownership |
+Ethereum is a decentralized network that:
+- Stores smart contracts
+- Maintains global state (balances, allowances)
+- Processes transactions
+- Ensures consensus across nodes
 
----
-
-## Frontend Perspective
-
-The frontend says:
-
-```text
-"Here is an action you can perform."
-```
+Once data is written here, it becomes immutable (hard to change).
 
 ---
 
-## Wallet Perspective
+# 5. EVM (Ethereum Virtual Machine)
 
-The wallet says:
+The EVM is the execution engine of Ethereum.
 
-```text
-"I approve or reject this action."
-```
+## Responsibilities:
+- Runs smart contract code
+- Processes function calls
+- Updates blockchain state
+- Ensures deterministic execution
 
----
-
-## 4. Ethereum Blockchain
-
-Ethereum stores:
-
-* smart contracts
-* balances
-* transaction history
-* blockchain state
-
-Once transactions are confirmed, the data becomes:
-
-* decentralized
-* transparent
-* difficult to modify
+Think of it as a global decentralized computer.
 
 ---
 
-## 5. EVM (Ethereum Virtual Machine)
+# 6. ERC-20 Smart Contract
 
-The EVM is Ethereum's execution engine.
+This is the core logic layer of the token system.
 
-### Responsibilities
+## It is responsible for:
+- Tracking balances
+- Moving tokens between accounts
+- Managing allowances (permissions)
+- Controlling total supply
+- Emitting events for tracking
 
-* Execute smart contract code
-* Process transactions
-* Update blockchain state
-
-### Mental Model
-
-```text
-Ethereum's decentralized computer
-```
+Everything else depends on this contract.
 
 ---
 
-## 6. ERC-20 Smart Contract
+# Transaction Lifecycle (Step-by-Step)
 
-The smart contract contains the actual token logic.
+Example: Alice sends 100 tokens to Bob
 
-### Responsibilities
+## Step 1 — User Action
+Alice clicks "Send 100 tokens" in the frontend.
 
-* Track balances
-* Transfer tokens
-* Manage approvals
-* Store total supply
-* Emit events
+## Step 2 — Frontend Request
+Frontend builds a transaction:
+- function: transfer()
+- parameters: Bob, 100
 
-The ERC-20 contract is the core of the token system.
+## Step 3 — Wallet Confirmation
+MetaMask prompts Alice:
+- "Do you approve this transaction?"
 
-Everything else interacts with it.
+Alice signs it.
 
----
+## Step 4 — Network Submission
+Signed transaction is broadcast to Ethereum network.
 
-# Full Transaction Lifecycle
+## Step 5 — Execution (EVM)
+The EVM executes the ERC-20 contract function.
 
-Example:
+## Step 6 — State Update
+Balances are updated:
+- Alice decreases
+- Bob increases
 
-```text
-Alice sends 100 MTK to Bob
-```
-
----
-
-## Step 1 — User Interaction
-
-Alice clicks:
-
-```text
-Send
-```
-
-inside the frontend application.
+## Step 7 — Event Emission
+A Transfer event is emitted for tracking.
 
 ---
 
-## Step 2 — Frontend Creates Request
+# Final Mental Model
 
-The frontend prepares:
+ERC-20 systems work like this:
 
-```javascript
-contract.transfer(bob, 100)
-```
-
----
-
-## Step 3 — Wallet Authorization
-
-MetaMask appears and asks:
-
-```text
-Do you approve this transaction?
-```
-
-Alice confirms.
-
-The wallet signs the transaction using Alice's private key.
-
----
-
-## Step 4 — Transaction Sent to Ethereum
-
-The signed transaction is broadcast to the Ethereum network.
-
----
-
-## Step 5 — EVM Executes Contract Code
-
-The EVM executes:
-
-```solidity
-transfer(bob, 100)
-```
-
-inside the ERC-20 contract.
-
----
-
-## Step 6 — Contract Updates Balances
-
-### Before
-
-```text
-Alice = 1000
-Bob = 200
-```
-
-### After
-
-```text
-Alice = 900
-Bob = 300
-```
-
----
-
-## Step 7 — Event Emitted
-
-The contract emits a `Transfer` event.
-
-Wallets and applications monitor these events to update their interfaces.
-
----
-
-# Final Intuition
-
-An ERC-20 ecosystem is a collaboration between:
-
-* users
-* frontends
-* wallets
-* Ethereum
-* the EVM
-* smart contracts
-
-The smart contract is the center of the system.
-
-Everything else exists to:
-
-* interact with it
-* authorize actions
-* display information
-
-
+- User initiates action
+- Frontend prepares request
+- Wallet authorizes it
+- Blockchain executes it
+- Smart contract defines the rules
 

@@ -2,24 +2,22 @@
 
 ## Overview
 
-An ERC-20 token is fundamentally:
+An ERC-20 token is a smart contract that behaves like a decentralized accounting system.
 
-```text
-A smart contract that manages balances using standardized rules.
-````
+It is responsible for tracking:
+- token ownership
+- balances
+- permissions (allowances)
+- total supply
+- transfer operations
+- system events
 
-Internally, the contract behaves like a digital accounting system.
-
-Its responsibilities include:
-
-* tracking ownership
-* moving balances
-* managing permissions
-* emitting transaction logs
+Internally, everything is represented using simple storage variables and mappings.
 
 ---
 
-# ERC-20 Internal Structure
+# Core Internal Structure
+
 
 ```text
 ERC20 Contract
@@ -268,10 +266,3 @@ ERC-20 is fundamentally:
 ```text
 A standardized accounting and permission system on Ethereum
 ```
-
-The contract manages:
-
-* who owns tokens
-* how balances move
-* who can spend on behalf of whom
-
