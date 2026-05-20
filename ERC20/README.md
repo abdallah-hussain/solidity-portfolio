@@ -1,96 +1,80 @@
-\# Solidity Portfolio — ERC-20
+# ERC-20 Implementations
 
+A structured smart contract learning journey focused on deeply understanding the ERC-20 standard by building it in two stages:
 
+1. From raw implementation (no libraries)
+2. Using production-grade OpenZeppelin contracts
 
-A progressive series of smart contract projects built from the ground up.
+---
 
+## Goal
 
+Most developers use ERC-20 contracts without understanding their internal mechanics.
 
-The rule is simple: understand it before you use it.  
+This repository solves that by rebuilding the standard from the ground up before using any abstraction layer.
 
-No copying. No skipping steps. No moving forward until the current one makes sense.
+The focus is not just writing contracts — but understanding how and why they work.
 
+---
 
+## Projects
 
-\---
+### 01 · ERC-20 From Scratch
 
+**Zero dependencies. Full manual implementation.**
 
+This project implements the ERC-20 standard completely from first principles.
 
-\## Projects
+#### Key Features:
+- Token state management (balances mapping)
+- Allowance system (approve / transferFrom)
+- Transfer logic with safety checks
+- Event emission (Transfer / Approval)
+- Full adherence to ERC-20 interface
 
+#### Why it matters:
+This removes the “black box” effect. Every line of logic is visible, traceable, and understood.
 
+→ [View Project](./01-erc20-from-scratch/)
 
-\### 01 · ERC-20 From Scratch
+---
 
-> Built with zero external libraries
+### 02 · ERC-20 Using OpenZeppelin
 
+**Production-ready implementation using OpenZeppelin Contracts v5**
 
+This project rebuilds the same token using industry-standard libraries.
 
-The complete ERC-20 standard implemented manually — three files, every line written by hand.
+#### Key Features:
+- OpenZeppelin ERC20 base contract
+- Minting & burning extensions
+- Access control patterns (Ownable / roles)
+- Safer and audited implementation
+- Cleaner, production-focused architecture
 
+#### Why it matters:
+After understanding the internals, OpenZeppelin becomes a tool—not a mystery.
 
+→ [View Project](./02-openzeppelin-erc20/)
 
-Before touching any library, I wanted to know exactly what it replaces.
+---
 
-This project is that foundation. Balances, transfers, allowances, events —
+## Learning Approach
 
-all of it written from scratch and explained line by line.
+The structure follows a strict rule:
 
+> Understand the mechanism first. Then abstract it.
 
+This avoids the common problem where developers rely on libraries without understanding failure points or internal behavior.
 
-→ \[View Project](./01-erc20-from-scratch/)
+---
 
+## Key Takeaway
 
+Building from scratch first creates intuition.
 
-\---
+Using OpenZeppelin afterward creates production readiness.
 
+Together, they form a complete understanding of ERC-20 systems.
 
-
-\### 02 · ERC-20 With OpenZeppelin
-
-> Built using OpenZeppelin 5.0.0
-
-
-
-The same token, rebuilt the way you'd actually ship it in production.
-
-
-
-Because project 01 already covered the internals, this project focuses on
-
-what OpenZeppelin adds on top: role-based minting, burning, and pausable transfers.
-
-OpenZeppelin is no longer a black box — it's a library I understand.
-
-
-
-→ \[View Project](./02-openzeppelin-erc20/)
-
-
-
-\---
-
-
-
-\## Why This Order
-
-
-
-Most people start with OpenZeppelin.  
-
-The problem is you end up calling functions you don't understand.
-
-
-
-That gap shows up the moment something breaks.
-
-
-
-Building from scratch first closes that gap permanently.
-
-
-
-\---
-
-
-
+---
