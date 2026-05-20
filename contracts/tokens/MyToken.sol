@@ -10,7 +10,7 @@ contract MyToken is ERC20 {
             "My Token",
             "MTK",
             18,
-            1000000 * 10**18  // 1 million FULL tokens
+            1000000 // 1 million FULL tokens where this conversation( 1000000 * 10**18 ) is done inside core ERC20.so;
         )
     {}
 

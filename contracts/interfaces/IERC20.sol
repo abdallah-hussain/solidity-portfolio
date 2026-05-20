@@ -8,7 +8,7 @@ interface IERC20 {
     // -------------------------
     function totalSupply() external view returns (uint256); // read-only function to view How many tokens exist in total
     function balanceOf(address account) external view returns (uint256);// read-only function to view How many tokens does this wallet own
-    function allownce(address owner , address spender) external view returns (uint256);// read-only function to view How many tokens is spender allowed to use from owner
+    function allowance(address owner , address spender) external view returns (uint256);// read-only function to view How many tokens is spender allowed to use from owner
     
     // -------------------------
     // Write functions
