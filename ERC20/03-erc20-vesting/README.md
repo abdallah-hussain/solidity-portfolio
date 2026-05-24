@@ -15,7 +15,7 @@ The repository is designed for both:
 
 # Token Vesting Architecture & Flows
 
-![Token Vesting Diagrams](./images/erc20-overview.png)
+![Token Vesting Diagrams](./images/erc20-vesting-overview.png)
 
 The diagram above provides a complete visual overview of:
 
@@ -178,7 +178,7 @@ Additional technical documentation:
 │   └── diagrams.md
 │
 ├── images/
-│   └── erc20-overview.png
+│   └── erc20-vesting-overview.png
 │
 └── README.md
 
