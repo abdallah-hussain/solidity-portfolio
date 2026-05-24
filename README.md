@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Solidity Portfolio 
 =======
 # Time-Locked Savings Bank
@@ -44,7 +43,6 @@ A Solidity smart contract that simulates a decentralized savings vault with time
 
 ---------------------------------------------------
 # License
-<<<<<<< HEAD
 MIT
 >>>>>>> d656ae0 (Update README.md)
 =======
